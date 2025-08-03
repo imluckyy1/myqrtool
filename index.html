@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>QR Code Generator</h1>
+    <input type="text" id="urlInput" placeholder="Enter URL here" />
+
+    <!-- PREMIUM OPTIONS (Hidden by Default) -->
+    <div id="premiumOptions" style="display: none;">
+      <div class="color-pickers">
+        <label>Dark Color: <input type="color" id="darkColor" /></label>
+        <label>Light Color: <input type="color" id="lightColor" /></label>
+      </div>
+      <div>
+        <label>Upload Logo: <input type="file" id="logoInput" /></label>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button onclick="generateQRCode()">Generate QR Code</button>
+      <button id="downloadBtn" onclick="downloadQRCode()">Download QR Code</button>
+    </div>
+
+    <div id="qrcode"></div>
+
+    <hr />
+    <h3>Unlock more features</h3>
+    <button id="premiumBtn" class="premium-button" onclick="handlePremium()">Go Premium</button>
+
+    <div id="premiumFeatures">
+      <h4>🔒 Premium Features</h4>
+      <ul>
+        <li id="feature-darkcolor">✅ Change Dark Color</li>
+        <li id="feature-lightcolor">✅ Change Light Color</li>
+        <li id="feature-logo">✅ Upload Logo</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
