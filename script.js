@@ -75,7 +75,7 @@ function downloadQRCode() {
 // Razorpay Premium Button
 document.getElementById("premiumBtn").addEventListener("click", function () {
   const options = {
-    key: "rzp_test_do32Fq6Jm97B9A", // Replace with your Razorpay test key
+    key: "rzp_live_CkQYKz448ap3As", // Replace with your Razorpay test key
     amount: 1000,
     currency: "INR",
     name: "QR Unlock",
@@ -111,3 +111,4 @@ function unlockPremiumFeatures() {
   document.getElementById('feature-logo').innerHTML = '✅ Upload Logo';
   document.querySelector('#premiumFeatures h4').innerHTML = '🔓 Premium Features Unlocked';
 }
+
