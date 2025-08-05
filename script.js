@@ -57,7 +57,7 @@ function downloadQRCode() {
 function handlePremium() {
   const options = {
     key: "rzp_live_CkQYKz448ap3As", // Replace with your Razorpay key
-    amount: 1000, // 50 INR = 5000 paise
+    amount: 10, // 50 INR = 5000 paise
     currency: "INR",
     name: "QR Premium Unlock",
     description: "Unlock premium QR features",
@@ -87,3 +87,4 @@ function unlockPremiumFeatures() {
   document.getElementById("premiumBtn").style.display = "none";
   document.getElementById("premiumFeatures").style.display = "none";
 }
+
