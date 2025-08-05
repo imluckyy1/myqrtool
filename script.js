@@ -1,74 +1,35 @@
-let qrcode;
+let isPremium = localStorage.getItem("isPremium") === "true";
 
-function generateQRCode() {
-  const url = document.getElementById("urlInput").value;
-  const darkColor = document.getElementById("darkColor").value || "#000000";
-  const lightColor = document.getElementById("lightColor").value || "#ffffff";
-  const logoInput = document.getElementById("logoInput");
-
-  if (!url) {
-    alert("Please enter a URL");
-    return;
+// Initialize on page load
+window.onload = () => {
+  if (isPremium) {
+    enablePremiumFeatures();
   }
+};
 
-  document.getElementById("qrcode").innerHTML = "";
-
-  qrcode = new QRCode(document.getElementById("qrcode"), {
-    text: url,
-    width: 256,
-    height: 256,
-    colorDark: darkColor,
-    colorLight: lightColor,
-    correctLevel: QRCode.CorrectLevel.H
-  });
-
-  // Add logo if uploaded
-  if (logoInput.files.length > 0) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const logo = new Image();
-      logo.src = e.target.result;
-      logo.onload = function () {
-        const canvas = document.querySelector("#qrcode canvas");
-        const ctx = canvas.getContext("2d");
-        const size = 64;
-        const x = (canvas.width - size) / 2;
-        const y = (canvas.height - size) / 2;
-        ctx.drawImage(logo, x, y, size, size);
-      };
-    };
-    reader.readAsDataURL(logoInput.files[0]);
-  }
-}
-
-function downloadQRCode() {
-  const canvas = document.querySelector("#qrcode canvas");
-  if (!canvas) {
-    alert("Please generate the QR code first.");
-    return;
-  }
-
-  const link = document.createElement("a");
-  link.download = "qr-code.png";
-  link.href = canvas.toDataURL();
-  link.click();
+function enablePremiumFeatures() {
+  document.getElementById("premiumOptions").style.display = "block";
+  const premiumBtn = document.getElementById("premiumBtn");
+  premiumBtn.textContent = "✅ Premium Unlocked";
+  premiumBtn.disabled = true;
 }
 
 function handlePremium() {
   const options = {
-    key: "rzp_live_CkQYKz448ap3As", // Replace with your Razorpay key
-    amount: 10, // 50 INR = 5000 paise
+    key: "rzp_live_CkQYKz448ap3As", // 🔁 Replace with your actual Razorpay key
+    amount: 1000, // in paise = ₹49
     currency: "INR",
-    name: "QR Premium Unlock",
-    description: "Unlock premium QR features",
-    image: "https://imluckyy1.github.io/myqrtool/logo.png",
+    name: "QR Tool Premium",
+    description: "Unlock all premium features",
     handler: function (response) {
-      alert("Payment Successful! Premium features unlocked.");
-      unlockPremiumFeatures();
+      localStorage.setItem("isPremium", "true");
+      isPremium = true;
+      enablePremiumFeatures();
+      alert("✅ Payment successful! Premium features unlocked.");
     },
     prefill: {
-      name: "",
-      email: ""
+      name: "QR User",
+      email: "test@example.com"
     },
     theme: {
       color: "#3399cc"
@@ -79,12 +40,64 @@ function handlePremium() {
   rzp.open();
 }
 
-function unlockPremiumFeatures() {
-  // Show the premium options section
-  document.getElementById("premiumOptions").style.display = "block";
+function generateQRCode() {
+  const url = document.getElementById("urlInput").value;
+  if (!url) {
+    alert("❗Please enter a URL");
+    return;
+  }
 
-  // Optionally hide premium purchase section
-  document.getElementById("premiumBtn").style.display = "none";
-  document.getElementById("premiumFeatures").style.display = "none";
+  // Clear previous QR
+  const qrContainer = document.getElementById("qrcode");
+  qrContainer.innerHTML = "";
+
+  const darkColor = isPremium ? document.getElementById("darkColor").value || "#000000" : "#000000";
+  const lightColor = isPremium ? document.getElementById("lightColor").value || "#ffffff" : "#ffffff";
+
+  const qr = new QRCode(qrContainer, {
+    text: url,
+    width: 256,
+    height: 256,
+    colorDark: darkColor,
+    colorLight: lightColor,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  // Wait a bit, then add logo if premium
+  if (isPremium) {
+    setTimeout(() => {
+      const fileInput = document.getElementById("logoInput");
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const logoImg = new Image();
+          logoImg.src = e.target.result;
+          logoImg.onload = function () {
+            const canvas = qrContainer.querySelector("canvas");
+            const ctx = canvas.getContext("2d");
+            const centerX = canvas.width / 2 - 32;
+            const centerY = canvas.height / 2 - 32;
+            ctx.drawImage(logoImg, centerX, centerY, 64, 64);
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    }, 500);
+  }
 }
+
+function downloadQRCode() {
+  const canvas = document.querySelector("#qrcode canvas");
+  if (!canvas) {
+    alert("❗Please generate a QR code first");
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.download = "myqr.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
 
